@@ -1,0 +1,29 @@
+<div *ngIf="questionsForm" class="container">
+  <h2>{{title}}</h2>
+  <form (ngSubmit)="onSubmit()" [formGroup]="questionsForm">
+    <div *ngFor="let question of questions">
+      <div [ngSwitch]="question.questiontype">
+        <mat-form-field *ngSwitchCase="questionType.open">
+          <mat-label>{{question.question}}</mat-label>
+          <input matInput [value]="question.answer" [formControlName]="question.questionId">
+        </mat-form-field>
+
+        <div *ngSwitchCase="questionType.radio" >
+          <mat-label>{{question.question}}</mat-label>
+          <mat-radio-group [id]="question.questionId" [formControlName]="question.questionId">
+            <mat-radio-button *ngFor="let option of question.possibleAnswers" [value]="option">{{option}}</mat-radio-button>
+          </mat-radio-group>
+        </div>
+
+        <mat-error *ngIf="questionsForm.controls[question.questionId.toString()].touched && questionsForm.controls[question.questionId.toString()].invalid">{{question.question}} is required</mat-error>
+      </div>
+    </div>
+    <div>
+      <button mat-raised-button color="primary" type="submit" [disabled]="!questionsForm.valid">Save</button>
+    </div>
+  </form>
+
+  <div *ngIf="answers">
+    <strong>provided answers: </strong><br>{{answers | json}}
+  </div>
+</div>
